@@ -7,7 +7,7 @@ public class Dot {
 	
 	public int x;
 	public int y;
-	
+	private int p, w, v;
 	private int r, g, b;
 	public double mass;
 	
@@ -31,12 +31,14 @@ public class Dot {
 
 	private boolean isRGBNotWhite() {
 		Random rand = new Random();
-
+		p = r - g;
+		w = g - b;
+		v = b - r;
 		r = rand.nextInt(255);
 		g = rand.nextInt(255);
 		b = rand.nextInt(255);
 		
-		while(r > 220 && g > 220 && b > 220) {
+		while(p > 80 || w > 80 || v > 80 || r > 220 && g > 220 && b > 220 || r < 50 && g < 50 && b < 50) {
 			r = rand.nextInt(255);
 			g = rand.nextInt(255);
 			b = rand.nextInt(255);
