@@ -98,6 +98,38 @@ public class Game {
 				updateNamePos();
 				drawDots();
 				
+				//Player-Blob Collision
+				for(int j=0; j<blobsArrayList.size(); j++){
+					Blobs eachBlob;
+					eachBlob = blobsArrayList.get(j);
+					double distance = Math.hypot(Player.x - eachBlob.initialX, Player.y-eachBlob.initialY);
+					if(distance<Player.getPlayerRad()+eachBlob.r){
+						if(eachBlob.mass<Player.mass){
+							if(Player.mass>Player.maxMass/2 && eachBlob.mass> Player.mass/2){
+								if(Player.isPlayerPointInElemetn(blobsArrayList.get(i).getBlobXCenter(), blobsArrayList(i).getYCenter())){
+										playSound(powerUp);
+								eachBlob.removeBlob();
+								blobsArrayList.remove(eachBlob);
+								
+								Player.increaseMass(eachBlob.mass);
+								Player.updatePlayer();
+							}
+						}else{
+							playSound(powerUp);
+							eachBlob.removeBlob();
+							blobsArraylist.remove(eachBlob);
+							
+							Player.increaseMass(eachBlob.mass);
+							Player.updatePlayer();
+							
+						}
+					}
+					if(eachBlob.mass>Player.mass){
+						removePlayer();
+						status = "lose";
+						endGame(getDurationAlive());
+					}
+				}
 				//Player-Dot Collision
 				for(int i = 0; i < dotsArrayList.size(); i++) {
 					Dot eachDot;
@@ -112,6 +144,17 @@ public class Game {
 
 						Player.increaseMass(Dot.MASS);
 						Player.updatePlayer();
+					}
+					//Collision and growth for Blobs-Dots
+					double bDistance = Math.hypot(Blobs.posX -eachDot.x, Blobs.posX-eachDot.x);
+					
+					if(bDistance<Blobs.getBlobsRad()+Dot.DOT_RAD){
+						eachDot = dotsArrayList.get(i);
+						eachDot.removeDot();
+						dotsArrayList.remove(eachDot);
+						
+						Blobs.increaseMass(Blobs.mass);
+						Blobs.updateBlob();
 					}
 				}
 				
