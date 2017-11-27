@@ -1,29 +1,89 @@
+//Import the following libraries to be used in the game:
 import java.awt.Color;
-import java.util.Random;
 
+/**
+ * Virus Class - "Obstacle" in the game. Decreases mass of a Blob or the Player if their mass is bigger than the Virus
+ * @author Devin Seals
+ * @see Rules in Game.java for the main properties of a Virus
+ */
 public class Virus {
-	public static final int MAX_VIRUS = 10;
-	public static final int BORDER = 8;
-	public int x;
-	public int y;
+	/** Maximum amount of Viruses allowed on the game */
+	public static int maxViruses = 7;
+
+	/** A Virus object's x,y values */
+	public int x, y;
+	/** A Virus object's radius */
 	public int rad;
+	/** A Virus object's mass */
 	public int mass;
-	
-	private EZCircle virus, virusOutline;
-	
-	public Virus(int x, int y, int rad) {
+
+	/** Array that contains the x,y points of the Virus polygon*/
+	private int[] xp, yp;
+	/** Array that contains the x,y points of the shadow for the Virus polygon */
+	private int[] xpShadow, ypShadow;
+	/** Turn degrees by which the Virus polygon rotates by */
+	private double turn = 0.0;
+
+	/** EZPolygon element for a Virus object */
+	private EZPolygon virus;
+	/** EZPolygon element for the shadow of a Virus object*/
+	private EZPolygon vShadow;
+
+	public Virus(int x, int y, int rad) { //Constructor
 		this.x = x;
 		this.y = y;
 		this.rad = rad;
-		this.mass = rad * 2;
-		
-		virusOutline = EZ.addCircle(x, y, rad * 2 + BORDER, rad * 2 + BORDER, Color.yellow, true);
-		virus = EZ.addCircle(x, y, rad * 2, rad * 2, Color.green, true);
-		
+
+		mass = rad * 2;
+
+		drawVirus();
 	}
-	
-	public int getVirusRad() {
-		return virusOutline.getWidth() / 2;
+
+	/** Draws a Virus object as an EZPolygon */
+	public void drawVirus() {
+		xp = new int[maxViruses];
+		yp = new int[maxViruses];
+
+		xpShadow = new int[maxViruses];
+		ypShadow = new int[maxViruses];
+
+		/*
+		 * The Math to find the xp[i], yp[i] points for the Pentagon Polygon and its shadow is credited to this post:
+		 * http://forum.codecall.net/topic/49508-polygon-tutorial/ 
+		 */
+		double angle = 2 * Math.PI / maxViruses;
+
+		for(int i = 0; i <  maxViruses; i++) {
+			double v = i * angle - turn;
+
+			xp[i] = x + (int)Math.round(rad * Math.cos(v));
+			yp[i] = y + (int)Math.round(rad * Math.sin(v));
+
+			int offset = 6; //Offset value for the shadow EZPolygon
+			xpShadow[i] = x + offset + (int)Math.round(rad * Math.cos(v));
+			ypShadow[i] = y + offset + (int)Math.round(rad * Math.sin(v));
+		}
+
+		vShadow = EZ.addPolygon(xpShadow, ypShadow, new Color(0, 0, 0, 85), true);
+		virus = EZ.addPolygon(xp, yp, Color.green, true);
+		EZText vText = EZ.addText(virus.getXCenter(), virus.getYCenter(), "Virus", Color.black); //EZText that says "Virus" that is centered on the Virus polygons
+		vText.setFontSize(mass / 5); //Scale the font size of vText by the mass / 5
 	}
-	
+
+	/*
+	 * The math to determine the degrees(turn) of rotateBy is credited to the same post:
+	 * http://forum.codecall.net/topic/49508-polygon-tutorial/ 
+	 */
+	public void rotate() {
+		double dv = 5 * 2 * Math.PI/360;
+
+		turn = turn + dv;
+
+		if(turn > 2 * Math.PI) {
+			turn -= 2 * Math.PI;
+		}
+
+		virus.rotateBy(turn);
+		vShadow.rotateBy(turn);
+	}
 }
