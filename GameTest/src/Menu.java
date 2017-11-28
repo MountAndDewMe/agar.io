@@ -26,11 +26,11 @@ public class Menu {
 	/** Thickness value for the border outline for any element that uses a border outline */
 	private final int BORDER = 8;
 	/** EZText Elements */
-	private EZText backText, title, titleShadow, playButtonText, howToPlayButtonText, optionsText;
+	public EZText backText, title, titleShadow, playButtonText, howToPlayButtonText, optionsText;
 	/** EZRectangle Elements */
-	private EZRectangle backButton, playButton, howToPlayButton, optionsButton;
+	public EZRectangle backButton, playButton, howToPlayButton, optionsButton;
 	/** EZRectangle outline borders Elements */
-	private EZRectangle backOutline, playButtonOutline, howToPlayButtonOutline, optionsOutline;
+	public EZRectangle backOutline, playButtonOutline, howToPlayButtonOutline, optionsOutline;
 	/** Maximum amount of EZCIrcles drawn on the Menu background */
 	private final int MAX_BACKGROUND_CIRCS = 40;
 	/** Array that holds the EZCircles used as a background for Menu */
@@ -41,10 +41,10 @@ public class Menu {
 	private boolean initialPhaseBranchHowToPlay = false;
 	private boolean initialPhaseBranchOptions = false;
 
-	////Initial Phase - How To Play Branch Elements////
+	/** Tutorial object. Object that handles the "How to Play" branch of initial phase */
 	Tutorial tutorial;
-	
-	////Initial Phase - Options Branch Elements////
+
+	/** Options object. Object that handles the "Options" branch of initial phase */
 	Options options;
 
 	////First Phase Elements////
@@ -66,7 +66,7 @@ public class Menu {
 	public boolean thirdPhase = false;
 
 	public Menu() { //Constructor 
-		options = new Options();
+		options = new Options(this);
 		tutorial = new Tutorial();
 		drawInitialPhase();
 	}
@@ -156,7 +156,6 @@ public class Menu {
 		if(initialPhaseBranchOptions) {
 			hideInitialPhase();
 			options.drawOptions();
-			drawReturnToMenu();
 		}
 	}
 
@@ -230,12 +229,12 @@ public class Menu {
 		EZ.removeEZElement(tutorial.tutorialScreenOutline);
 		EZ.removeEZElement(tutorial.tutorialScreen);
 		EZ.removeEZElement(tutorial.tutorialScreenTitle);
-		
+
 		EZ.removeEZElement(tutorial.player);
 		EZ.removeEZElement(tutorial.blobs);
 		EZ.removeEZElement(tutorial.dots);
 		EZ.removeEZElement(tutorial.virus);
-		
+
 		EZ.removeEZElement(tutorial.line1);
 		EZ.removeEZElement(tutorial.line2);
 		EZ.removeEZElement(tutorial.line3);
@@ -243,23 +242,25 @@ public class Menu {
 		EZ.removeEZElement(tutorial.line5);
 		EZ.removeEZElement(tutorial.line6);
 		EZ.removeEZElement(tutorial.line7);
-		
+
 		//initialPhaseBranchOptions Elements
 		EZ.removeEZElement(options.defaultButton);
+		EZ.removeEZElement(options.backOutline);
+		EZ.removeEZElement(options.backButton);
+		EZ.removeEZElement(options.backText);
+
 		EZ.removeEZElement(options.optionsScreen);
 		EZ.removeEZElement(options.optionsScreenOutline);
 		EZ.removeEZElement(options.optionsScreenTitle);
 
 		EZ.removeEZElement(options.maxDots);
 		EZ.removeEZElement(options.maxBlobs);
-		EZ.removeEZElement(options.maxViruses);
 		EZ.removeEZElement(options.maxPlayerMass);
 		EZ.removeEZElement(options.maxBlobMass);
 		EZ.removeEZElement(options.dotMass);
 
 		EZ.removeEZElement(options.maxDotsVal);
 		EZ.removeEZElement(options.maxBlobsVal);
-		EZ.removeEZElement(options.maxVirusesVal);
 		EZ.removeEZElement(options.maxPlayerMassVal);
 		EZ.removeEZElement(options.maxBlobMassVal);
 		EZ.removeEZElement(options.dotMassVal);
